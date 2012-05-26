@@ -49,7 +49,11 @@ object PatientApp extends Controller with Secured {
           errors => BadRequest(views.html.patient.view(PatientDao.findOneByID(id).get, errors)),
           observations => {
             val patient = PatientDao.findOneByID(id).get
-            PatientDao.save(PatientHelper.inject(patient, observations.obs))
+            var obs = observations.obs
+            if (obs.last == "") {
+              obs = obs.dropRight(1)
+            }
+            PatientDao.save(PatientHelper.inject(patient, obs))
             Logger.info("Saved observations for patient: %s".format(patient.name))
             Redirect(routes.PatientApp.view(id))
           }
