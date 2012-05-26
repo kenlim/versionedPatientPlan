@@ -10,17 +10,15 @@ import com.novus.salat.dao._
 case class Patient(
   id: ObjectId = new ObjectId,
   name: String,
-  observations: List[Observation]
+  observations: List[List[Item]]
 )
 
-case class Observation(
-  items: Item
+case class BaseObsList(
+  obs: List[String]
 )
 
 case class Item(
-  text: String,
-  author: String
-)
+  entry: String)
 
 object PatientDao extends SalatDAO[Patient, ObjectId](collection = mongoCollection("patientrecord")) {
   def all = find(MongoDBObject())

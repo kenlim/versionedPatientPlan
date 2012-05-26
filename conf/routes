@@ -17,3 +17,4 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET     /admin/patient                 controllers.PatientApp.index
 POST    /admin/patient                 controllers.PatientApp.create
 GET     /patient/:id                   controllers.PatientApp.view(id: ObjectId)
+POST    /patient/:id                   controllers.PatientApp.submit(id: ObjectId)

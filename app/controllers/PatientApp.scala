@@ -6,7 +6,8 @@ import data.Forms._
 import play.api.mvc._
 import play.api.Logger
 import org.bson.types.ObjectId
-import models.{Patient, PatientDao}
+import models.{BaseObsList, Patient, PatientDao}
+import utils.PatientHelper
 
 
 object PatientApp extends Controller with Secured {
@@ -17,7 +18,7 @@ object PatientApp extends Controller with Secured {
 
   def view(id: ObjectId) = Action {
       PatientDao.findOneByID(id).map( patient =>
-        Ok(views.html.patient.view(patient))
+        Ok(views.html.patient.view(patient, observationForm))
       ).getOrElse(NotFound)
     }
 
@@ -41,4 +42,23 @@ object PatientApp extends Controller with Secured {
       patient => Some(patient.name)
     }
   )
+
+  def submit(id: ObjectId) = withAuth {
+      user => implicit request =>
+        observationForm.bindFromRequest.fold(
+          errors => BadRequest(views.html.patient.view(PatientDao.findOneByID(id).get, errors)),
+          observations => {
+            val patient = PatientDao.findOneByID(id).get
+            PatientDao.save(PatientHelper.inject(patient, observations.obs))
+            Logger.info("Saved observations for patient: %s".format(patient.name))
+            Redirect(routes.PatientApp.view(id))
+          }
+        )
+    }
+
+    val observationForm = Form(
+      mapping(
+        "obs" -> list(text)
+      )(BaseObsList.apply)(BaseObsList.unapply)
+    )
 }
