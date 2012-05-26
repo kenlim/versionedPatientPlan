@@ -8,20 +8,16 @@
         <ol>
         @patient.observations.zipWithIndex.map {case(ob, index) =>
             <li><div>
-                @inputText(obsForm("entry[%s]".format(index) ),
-                        '_label -> "Entry",
-                        '_help -> "Observation.")
-                <ol>@ob.items.map { item =>
+                @inputText(obsForm("entry[%s]".format(index)), '_label -> "Entry")
+                <ul>@ob.items.map { item =>
                 <li>@item.entry</li>
-            }</ol>
+            }</ul>
             </div>
             </li>
         }
         </ol>
 
-    @inputText(obsForm("entry[%s]".format(patient.observations.length + 1) ),
-            '_label -> "Entry",
-            '_help -> "Observation.")
+    <ul><li>@inputText(obsForm("entry[%s]".format(patient.observations.length + 1)), '_label -> "Entry")</li></ul>
 
 
         <div class="controls">
