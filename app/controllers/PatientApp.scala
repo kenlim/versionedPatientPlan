@@ -29,7 +29,7 @@ object PatientApp extends Controller with Secured {
       patient => {
         PatientDao.save(patient)
         Logger.info("Created patient: %s".format(patient.name))
-        Redirect(routes.PatientApp.index)
+        Redirect(routes.PatientApp.view(patient.id))
       }
     )
   }

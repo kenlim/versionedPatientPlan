@@ -1,30 +1,47 @@
 @(patient: Patient, obsForm: Form[ObservationFormOutput])
 @import helper._
+@implicitField = @{ FieldConstructor(formBlankConstructor.f) }
+
 
 @main("Patient: " + patient.name) {
     <h1>Patient: @patient.name</h1>
 
-    @helper.form(routes.PatientApp.submit(patient.id), 'class -> "well form-horizontal") {
-        <ol>
+    @helper.form(routes.PatientApp.submit(patient.id)) {
+        <ol class="unstyled">
         @patient.observations.zipWithIndex.map {case(ob, index) =>
-            <li><div>
-                @inputText(obsForm("entry[%s]".format(index)), '_label -> "Entry")
+            <li class="span10"><div class="well">
+                @helper.input(obsForm("entry[%s]".format(index))) { (id, name, value, args) =>
+                    <input class="span9" type="text" name="@name" id="@id" @toHtmlArgs(args)>
+                }
                 <ul>@ob.items.map { item =>
-                <li>@item.entry (@item.date)</li>
-            }</ul>
+                    <li>@item.entry (@item.date)</li>
+                }
+                </ul>
             </div>
             </li>
         }
         </ol>
 
-    <ul><li>@inputText(obsForm("entry[%s]".format(patient.observations.length + 1)), '_label -> "Entry")</li></ul>
+    <ul class="unstyled">
+        <li class="span10" ><div class="well">
+            @helper.input(obsForm("entry[%s]".format(patient.observations.length))) { (id, name, value, args) =>
+               <input class="span9" type="text" name="@name" id="@id" @toHtmlArgs(args)>
+            }
+        </div>
+        </li>
+    </ul>
 
-    @textarea(obsForm("assessment"), '_label -> "Assessment")
+    <div class="span10 well">
+        <h2>Assessment</h2>
+    @helper.input(obsForm("assessment")) { (id, name, value, args) =>
+               <textarea class="span9" type="text" name="@name" id="@id" @toHtmlArgs(args) rows="3"></textarea>
+            }
         <ul>
         @patient.assessments.map {ass =>
                         <li>(@ass.date) @ass.text</li>
                 }
         </ul>
+    </div>
         <div class="controls">
             <input type="submit" value="Create New">
         </div>
