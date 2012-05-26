@@ -1,0 +1,30 @@
+@(patients: List[Patient], patientForm: Form[Patient])
+@import helper._
+@implicitField = @{ FieldConstructor(formHorizontalConstructor.f) }
+
+@main("Versioned Patient Record") {
+    <h1>Patient Records</h1>
+    <p>Total count: @patients.length</p>
+    <ul>
+        @patients.map { patient =>
+        <li><a href="@routes.PatientApp.view(patient.id)">@patient.name</a></li>
+        }
+    </ul>
+
+    <h2>Create new patient</h2>
+
+    @patientForm.globalError.map { error =>
+    <div class="alert alert-error">@error.message</div>
+    }
+
+    @helper.form(routes.PatientApp.create, 'class -> "well form-horizontal"){
+        @inputText(patientForm("name"),
+            '_label -> "Name",
+            '_help -> "Name of patient.",
+            '_error -> patientForm.error("name"))
+
+        <div class="controls">
+            <input type="submit" value="Create New">
+        </div>
+    }
+}

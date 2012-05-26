@@ -1,0 +1,13 @@
+@(loginForm: Form[(String, String)])(implicit flash: Flash)
+@import helper._
+@implicitField = @{ FieldConstructor(formHorizontalConstructor.f) }
+
+@helper.form(routes.Auth.authenticate, 'class -> "well form-horizontal"){
+    @inputText(loginForm("username"),
+    '_label -> "Username")
+
+    @inputPassword(loginForm("password"),
+        '_label -> "Password")
+
+<input type="submit" value="Login"></input>
+}
