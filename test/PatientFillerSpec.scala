@@ -26,7 +26,14 @@ class PatientFillerSpec extends Specification {
       val blankPatient = Patient(new ObjectId, "Martha", Nil)
 
       val newPatient = PatientHelper.inject(blankPatient, obsList)
+      newPatient.observations.foreach {println(_)}
       newPatient.observations must have size(2)
+
+      val obsList2 = "workit" :: Nil
+      val newPatient2 = PatientHelper.inject(newPatient, obsList2)
+      newPatient2.observations.foreach {println(_)}
+      newPatient2.observations must have size(2)
+
     }
   }
 }

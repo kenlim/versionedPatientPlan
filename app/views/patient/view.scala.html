@@ -1,19 +1,28 @@
 @(patient: Patient, obsForm: Form[BaseObsList])
 @import helper._
-@implicitField = @{ FieldConstructor(formHorizontalConstructor.f) }
 
 @main("Patient: " + patient.name) {
     <h1>Patient: @patient.name</h1>
 
     @helper.form(routes.PatientApp.submit(patient.id), 'class -> "well form-horizontal") {
-        <ul>
-        @patient.observations.foreach {ob =>
-            <li><ul>@ob.items.map { item =>
-                <li>@item</li>
-            }</ul>
+        <ol>
+        @patient.observations.zipWithIndex.map {case(ob, index) =>
+            <li><div>
+                @inputText(obsForm("entry[%s]".format(index) ),
+                        '_label -> "Entry",
+                        '_help -> "Observation.")
+                <ol>@ob.items.map { item =>
+                <li>@item.entry</li>
+            }</ol>
+            </div>
             </li>
         }
-        </ul>
+        </ol>
+
+    @inputText(obsForm("entry[%s]".format(patient.observations.length + 1) ),
+            '_label -> "Entry",
+            '_help -> "Observation.")
+
 
         <div class="controls">
             <input type="submit" value="Create New">

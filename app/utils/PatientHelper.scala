@@ -9,7 +9,11 @@ object PatientHelper {
     val merged = observations.zipAll(observationList, Observation(Nil), "")
 
     val newObservations = merged.map { case(obsList, entry) =>
+        if (!entry.isEmpty) {
           Observation(Item(entry) :: obsList.items)
+        } else {
+          Observation(obsList.items)
+        }
     }
 
     Patient(patient.id, patient.name, newObservations)

@@ -58,7 +58,7 @@ object PatientApp extends Controller with Secured {
 
     val observationForm = Form(
       mapping(
-        "obs" -> list(text)
+        "entry" -> list(text)
       )(BaseObsList.apply)(BaseObsList.unapply)
     )
 }
