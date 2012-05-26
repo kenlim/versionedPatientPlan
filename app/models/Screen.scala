@@ -10,7 +10,11 @@ import com.novus.salat.dao._
 case class Patient(
   id: ObjectId = new ObjectId,
   name: String,
-  observations: List[List[Item]]
+  observations: List[Observation]
+)
+
+case class Observation(
+  items: List[Item]
 )
 
 case class BaseObsList(

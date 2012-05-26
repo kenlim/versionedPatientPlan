@@ -1,4 +1,4 @@
-import models.Patient
+import models.{Observation, Patient}
 import org.bson.types.ObjectId
 import org.specs2.mutable._
 
@@ -23,10 +23,10 @@ class PatientFillerSpec extends Specification {
   "The list of observations" should {
     "inject themselves into the Patient list" in {
       val obsList = "Hello" :: "World" :: Nil
-      val blankPatient = Patient(new ObjectId, "Martha")
+      val blankPatient = Patient(new ObjectId, "Martha", Nil)
 
-      PatientHelper.inject(blankPatient, obsList)
-      blankPatient.observations must have size(2)
+      val newPatient = PatientHelper.inject(blankPatient, obsList)
+      newPatient.observations must have size(2)
     }
   }
 }

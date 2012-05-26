@@ -6,15 +6,14 @@
     <h1>Patient: @patient.name</h1>
 
     @helper.form(routes.PatientApp.submit(patient.id), 'class -> "well form-horizontal") {
-
-        @repeat(obsForm("obs"), min = 10) { obs =>
-
-            @inputText(obs,
-                '_label -> "Observation",
-                '_help -> "Enter observations here",
-                '_error -> obsForm.error("name"))
-
+        <ul>
+        @patient.observations.foreach {ob =>
+            <li><ul>@ob.items.map { item =>
+                <li>@item</li>
+            }</ul>
+            </li>
         }
+        </ul>
 
         <div class="controls">
             <input type="submit" value="Create New">
