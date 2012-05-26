@@ -1,21 +1,21 @@
 package utils
 
 import models.{Observation, Item, Patient}
+import java.util.Date
 
 
 object PatientHelper {
-  def inject(patient: Patient, observationList: List[String]) = {
+  def inject(patient: Patient, observationList: List[String], timestamp: Date) = {
     val observations = patient.observations
     val merged = observations.zipAll(observationList, Observation(Nil), "")
 
     val newObservations = merged.map { case(obsList, entry) =>
         if (!entry.isEmpty) {
-          Observation(Item(entry) :: obsList.items)
+          Observation(Item(entry, timestamp) :: obsList.items)
         } else {
           Observation(obsList.items)
         }
     }
-
-    Patient(patient.id, patient.name, newObservations)
+    newObservations
  }
 }

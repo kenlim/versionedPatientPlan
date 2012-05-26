@@ -1,4 +1,4 @@
-@(patient: Patient, obsForm: Form[BaseObsList])
+@(patient: Patient, obsForm: Form[ObservationFormOutput])
 @import helper._
 
 @main("Patient: " + patient.name) {
@@ -10,7 +10,7 @@
             <li><div>
                 @inputText(obsForm("entry[%s]".format(index)), '_label -> "Entry")
                 <ul>@ob.items.map { item =>
-                <li>@item.entry</li>
+                <li>@item.entry (@item.date)</li>
             }</ul>
             </div>
             </li>
@@ -19,7 +19,12 @@
 
     <ul><li>@inputText(obsForm("entry[%s]".format(patient.observations.length + 1)), '_label -> "Entry")</li></ul>
 
-
+    @textarea(obsForm("assessment"), '_label -> "Assessment")
+        <ul>
+        @patient.assessments.map {ass =>
+                        <li>(@ass.date) @ass.text</li>
+                }
+        </ul>
         <div class="controls">
             <input type="submit" value="Create New">
         </div>

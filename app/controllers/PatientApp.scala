@@ -6,8 +6,9 @@ import data.Forms._
 import play.api.mvc._
 import play.api.Logger
 import org.bson.types.ObjectId
-import models.{BaseObsList, Patient, PatientDao}
+import models.{ObservationFormOutput, Patient, PatientDao}
 import utils.PatientHelper
+import java.util.Date
 
 
 object PatientApp extends Controller with Secured {
@@ -37,7 +38,7 @@ object PatientApp extends Controller with Secured {
     mapping(
       "name" -> text
     ){
-      (name) => Patient(new ObjectId(), name, Nil)
+      (name) => Patient(new ObjectId(), name, Nil, Nil)
     }{
       patient => Some(patient.name)
     }
@@ -49,11 +50,8 @@ object PatientApp extends Controller with Secured {
           errors => BadRequest(views.html.patient.view(PatientDao.findOneByID(id).get, errors)),
           observations => {
             val patient = PatientDao.findOneByID(id).get
-            var obs = observations.obs
-            if (obs.last == "") {
-              obs = obs.dropRight(1)
-            }
-            PatientDao.save(PatientHelper.inject(patient, obs))
+            println(observations)
+            PatientDao.save(patient, observations)
             Logger.info("Saved observations for patient: %s".format(patient.name))
             Redirect(routes.PatientApp.view(id))
           }
@@ -62,7 +60,8 @@ object PatientApp extends Controller with Secured {
 
     val observationForm = Form(
       mapping(
+        "assessment" -> text,
         "entry" -> list(text)
-      )(BaseObsList.apply)(BaseObsList.unapply)
+      )(ObservationFormOutput.apply)(ObservationFormOutput.unapply)
     )
 }
